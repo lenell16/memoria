@@ -1,0 +1,73 @@
+{
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "react", "react-perf"],
+  "jsPlugins": [
+    {
+      "name": "@tanstack/query",
+      "specifier": "@tanstack/eslint-plugin-query"
+    },
+    {
+      "name": "@tanstack/router",
+      "specifier": "@tanstack/eslint-plugin-router"
+    },
+    {
+      "name": "turbo",
+      "specifier": "eslint-plugin-turbo"
+    }
+  ],
+  "env": {
+    "browser": true,
+    "es2022": true
+  },
+  "settings": {
+    "react": {
+      "linkComponents": [
+        {
+          "name": "Link",
+          "attributes": ["to", "href"]
+        }
+      ]
+    }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off",
+    "react/prop-types": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "no-undef": "off"
+      }
+    },
+    {
+      "files": [
+        "**/*.config.*",
+        "**/vite.config.*",
+        "**/vitest.config.*",
+        "**/*.cjs",
+        "**/*.mjs",
+        "**/*.cts",
+        "**/*.mts",
+        "scripts/**"
+      ],
+      "env": {
+        "node": true
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/.turbo/**",
+    "**/.vercel/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/.cache/**",
+    "**/routeTree.gen.ts",
+    "**/bun.lock",
+    "**/package-lock.json",
+    "**/pnpm-lock.yaml",
+    "**/yarn.lock"
+  ]
+}
