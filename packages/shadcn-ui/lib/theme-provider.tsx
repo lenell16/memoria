@@ -1,6 +1,6 @@
-import { ThemeProvider as NextThemesProvider } from "next-themes"
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>
+type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
 
 export function ThemeProvider({
   children,
@@ -20,7 +20,7 @@ export function ThemeProvider({
     >
       {children}
     </NextThemesProvider>
-  )
+  );
 }
 
-export { useTheme } from "next-themes"
+export { useTheme } from "next-themes";

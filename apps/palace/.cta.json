@@ -10,13 +10,5 @@
   "install": true,
   "version": 1,
   "framework": "react-cra",
-  "chosenAddOns": [
-    "compiler",
-    "db",
-    "form",
-    "table",
-    "start",
-    "store",
-    "tanstack-query"
-  ]
+  "chosenAddOns": ["compiler", "db", "form", "table", "start", "store", "tanstack-query"]
 }

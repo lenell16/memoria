@@ -27,6 +27,7 @@
   },
   "experimentalSortImports": {
     "internalPattern": ["@repo/"],
+    "newlinesBetween": false,
     "partitionByNewline": true
   }
 }
