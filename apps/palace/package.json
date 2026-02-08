@@ -37,6 +37,7 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@repo/typescript-config": "*",
     "@biomejs/biome": "2.2.4",
     "@tanstack/devtools-event-client": "^0.4.0",
     "@tanstack/devtools-vite": "^0.3.11",
