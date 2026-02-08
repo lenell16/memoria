@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 100,
+  "endOfLine": "lf",
+  "semi": true,
+  "singleQuote": false,
+  "jsxSingleQuote": false,
+  "trailingComma": "all",
+  "insertFinalNewline": true,
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/.turbo/**",
+    "**/.vercel/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/.cache/**",
+    "**/routeTree.gen.ts",
+    "**/bun.lock",
+    "**/package-lock.json",
+    "**/pnpm-lock.yaml",
+    "**/yarn.lock"
+  ],
+  "experimentalTailwindcss": {
+    "functions": ["clsx", "cn", "cva", "tw", "twMerge"],
+    "stylesheet": "./packages/shadcn-ui/styles/base.css"
+  },
+  "experimentalSortImports": {
+    "internalPattern": ["@repo/"],
+    "partitionByNewline": true
+  }
+}
