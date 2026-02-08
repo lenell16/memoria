@@ -6,8 +6,7 @@
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run",
-    "check": "biome check"
+    "test": "vitest run"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
@@ -37,7 +36,6 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
-    "@biomejs/biome": "2.2.4",
     "@tanstack/devtools-event-client": "^0.4.0",
     "@tanstack/devtools-vite": "^0.3.11",
     "@testing-library/dom": "^10.4.0",
