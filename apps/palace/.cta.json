@@ -1,0 +1,23 @@
+{
+  "initialized": true,
+  "mode": "file-router",
+  "projectName": "palace",
+  "typescript": true,
+  "tailwind": true,
+  "git": true,
+  "addOnOptions": {},
+  "packageManager": "bun",
+  "install": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "compiler",
+    "db",
+    "form",
+    "table",
+    "start",
+    "store",
+    "tanstack-query",
+    "biome"
+  ]
+}
