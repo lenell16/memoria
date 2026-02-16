@@ -3,9 +3,6 @@ import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/reac
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { ThemeProvider } from "@repo/shadcn-ui/lib/theme-provider";
-import Header from "../components/Header";
-
-import StoreDevtools from "../lib/demo-store-devtools";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
@@ -28,7 +25,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "Palace",
+      },
+      {
+        name: "description",
+        content: "Palace application scaffold",
       },
     ],
     links: [
@@ -50,7 +51,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ThemeProvider>
-          <Header />
           {children}
         </ThemeProvider>
         <TanStackDevtools
@@ -62,7 +62,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               name: "Tanstack Router",
               render: <TanStackRouterDevtoolsPanel />,
             },
-            StoreDevtools,
             TanStackQueryDevtools,
           ]}
         />
