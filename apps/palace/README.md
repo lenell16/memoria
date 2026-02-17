@@ -63,6 +63,7 @@ Schema is defined in Drizzle TS files at `src/server/db/schema/`. Migrations are
 - `bun run db:reset` — drop and recreate DB, reapply all migrations and seeds
 - `bun run db:push:fast` — sync Drizzle schema directly to DB (rapid prototyping)
 - `bun run db:studio` — open Drizzle Studio for visual DB browsing
+- `bun run db:studio:supabase` — open Supabase Studio (requires `db:local:start` first)
 
 **Notes:**
 
