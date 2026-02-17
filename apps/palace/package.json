@@ -10,6 +10,7 @@
     "db:local:start": "supabase start",
     "db:local:stop": "supabase stop",
     "db:local:status": "supabase status",
+    "db:types": "supabase gen types typescript --local > src/server/db/supabase.types.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun --env-file=.env.local drizzle-kit migrate",
     "db:reset": "supabase db reset",
@@ -19,6 +20,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
     "@repo/shadcn-ui": "*",
+    "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/match-sorter-utils": "^8.19.4",

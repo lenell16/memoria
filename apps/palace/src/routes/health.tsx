@@ -30,6 +30,11 @@ function HealthPage() {
         <p className="mt-2 text-sm text-muted-foreground">
           Timestamp: {health.timestamp}
         </p>
+        {health.profilesViaAdmin !== null && (
+          <p className="mt-2 text-sm text-muted-foreground">
+            Profiles via typed admin client: {health.profilesViaAdmin.length}
+          </p>
+        )}
         {health.error && (
           <p className="mt-2 text-sm text-destructive">{health.error}</p>
         )}

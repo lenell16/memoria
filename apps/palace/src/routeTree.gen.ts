@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupabaseTestRouteImport } from './routes/supabase-test'
 import { Route as HealthRouteImport } from './routes/health'
 import { Route as DbTestRouteImport } from './routes/db-test'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SupabaseTestRoute = SupabaseTestRouteImport.update({
+  id: '/supabase-test',
+  path: '/supabase-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HealthRoute = HealthRouteImport.update({
   id: '/health',
   path: '/health',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/db-test': typeof DbTestRoute
   '/health': typeof HealthRoute
+  '/supabase-test': typeof SupabaseTestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/db-test': typeof DbTestRoute
   '/health': typeof HealthRoute
+  '/supabase-test': typeof SupabaseTestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/db-test': typeof DbTestRoute
   '/health': typeof HealthRoute
+  '/supabase-test': typeof SupabaseTestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/db-test' | '/health'
+  fullPaths: '/' | '/db-test' | '/health' | '/supabase-test'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/db-test' | '/health'
-  id: '__root__' | '/' | '/db-test' | '/health'
+  to: '/' | '/db-test' | '/health' | '/supabase-test'
+  id: '__root__' | '/' | '/db-test' | '/health' | '/supabase-test'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DbTestRoute: typeof DbTestRoute
   HealthRoute: typeof HealthRoute
+  SupabaseTestRoute: typeof SupabaseTestRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/supabase-test': {
+      id: '/supabase-test'
+      path: '/supabase-test'
+      fullPath: '/supabase-test'
+      preLoaderRoute: typeof SupabaseTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/health': {
       id: '/health'
       path: '/health'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DbTestRoute: DbTestRoute,
   HealthRoute: HealthRoute,
+  SupabaseTestRoute: SupabaseTestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
