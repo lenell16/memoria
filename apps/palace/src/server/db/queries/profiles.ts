@@ -1,0 +1,18 @@
+import { eq } from "drizzle-orm";
+import { db } from "../client";
+import { profiles } from "../schema/profiles";
+
+export async function listProfiles() {
+  return db.select().from(profiles);
+}
+
+export async function getProfileById(id: string) {
+  return db.select().from(profiles).where(eq(profiles.id, id));
+}
+
+export async function createProfile(data: {
+  displayName: string;
+  avatarUrl?: string;
+}) {
+  return db.insert(profiles).values(data).returning();
+}
