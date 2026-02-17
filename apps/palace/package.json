@@ -10,8 +10,11 @@
     "db:local:start": "supabase start",
     "db:local:stop": "supabase stop",
     "db:local:status": "supabase status",
-    "db:export": "drizzle-kit export",
-    "db:push:fast": "bun --env-file=.env.local drizzle-kit push"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "bun --env-file=.env.local drizzle-kit migrate",
+    "db:reset": "supabase db reset",
+    "db:push:fast": "bun --env-file=.env.local drizzle-kit push",
+    "db:studio": "bun --env-file=.env.local drizzle-kit studio"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
