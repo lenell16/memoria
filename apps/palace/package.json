@@ -6,11 +6,15 @@
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:local:start": "supabase start",
+    "db:local:stop": "supabase stop",
+    "db:local:status": "supabase status"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
     "@repo/shadcn-ui": "*",
+    "@supabase/supabase-js": "^2.95.3",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/query-db-collection": "^1.0.8",

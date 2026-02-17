@@ -9,6 +9,37 @@ bun install
 bun --bun run dev
 ```
 
+## Local Database Setup
+
+The app uses Supabase for local development. To run the full stack with database connectivity:
+
+### Prerequisites
+
+- **Docker Desktop** installed and running
+- **Supabase CLI**: `brew install supabase/tap/supabase`
+
+### Setup steps
+
+1. From `apps/palace`, start the local Supabase stack:
+   ```bash
+   cd apps/palace && bun run db:local:start
+   ```
+
+2. Copy `.env.example` to `.env.local` and fill in the values. Use `supabase status --output json` for `ANON_KEY`, `SERVICE_ROLE_KEY`, `API_URL`, and `DB_URL` (the JSON output provides JWT keys required by the Supabase JS client).
+
+3. Run the app:
+   ```bash
+   bun run dev
+   ```
+
+4. Visit [http://localhost:3000/health](http://localhost:3000/health) to confirm database connectivity.
+
+### Local database commands
+
+- `bun run db:local:start` — start the local Supabase stack
+- `bun run db:local:stop` — stop the local stack
+- `bun run db:local:status` — show URLs and keys
+
 # Building For Production
 
 To build this application for production:

@@ -1,0 +1,2 @@
+-- Seed data for local development. Add inserts here as needed.
+-- This file is loaded during `supabase db reset`.
