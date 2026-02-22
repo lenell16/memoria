@@ -8,6 +8,27 @@
       "when": 1771297981288,
       "tag": "0000_faulty_yellow_claw",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771308892900,
+      "tag": "0001_enable_vector_extension",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771308924135,
+      "tag": "0002_stale_slyde",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771308943391,
+      "tag": "0003_match_embeddings_function",
+      "breakpoints": true
     }
   ]
 }

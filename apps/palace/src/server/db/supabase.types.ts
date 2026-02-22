@@ -34,6 +34,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      embeddings: {
+        Row: {
+          content: string
+          created_at: string
+          embedding: string
+          id: string
+          metadata: Json
+          owner_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          embedding: string
+          id?: string
+          metadata?: Json
+          owner_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          embedding?: string
+          id?: string
+          metadata?: Json
+          owner_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -63,7 +90,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_embeddings: {
+        Args: {
+          match_count?: number
+          match_threshold?: number
+          p_owner_id?: string
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          id: string
+          metadata: Json
+          similarity: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

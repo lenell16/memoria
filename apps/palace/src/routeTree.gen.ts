@@ -10,13 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupabaseTestRouteImport } from './routes/supabase-test'
+import { Route as RlsTestRouteImport } from './routes/rls-test'
 import { Route as HealthRouteImport } from './routes/health'
 import { Route as DbTestRouteImport } from './routes/db-test'
+import { Route as AnonTestRouteImport } from './routes/anon-test'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SupabaseTestRoute = SupabaseTestRouteImport.update({
   id: '/supabase-test',
   path: '/supabase-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RlsTestRoute = RlsTestRouteImport.update({
+  id: '/rls-test',
+  path: '/rls-test',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HealthRoute = HealthRouteImport.update({
@@ -29,6 +36,11 @@ const DbTestRoute = DbTestRouteImport.update({
   path: '/db-test',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnonTestRoute = AnonTestRouteImport.update({
+  id: '/anon-test',
+  path: '/anon-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,35 +49,62 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/anon-test': typeof AnonTestRoute
   '/db-test': typeof DbTestRoute
   '/health': typeof HealthRoute
+  '/rls-test': typeof RlsTestRoute
   '/supabase-test': typeof SupabaseTestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/anon-test': typeof AnonTestRoute
   '/db-test': typeof DbTestRoute
   '/health': typeof HealthRoute
+  '/rls-test': typeof RlsTestRoute
   '/supabase-test': typeof SupabaseTestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/anon-test': typeof AnonTestRoute
   '/db-test': typeof DbTestRoute
   '/health': typeof HealthRoute
+  '/rls-test': typeof RlsTestRoute
   '/supabase-test': typeof SupabaseTestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/db-test' | '/health' | '/supabase-test'
+  fullPaths:
+    | '/'
+    | '/anon-test'
+    | '/db-test'
+    | '/health'
+    | '/rls-test'
+    | '/supabase-test'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/db-test' | '/health' | '/supabase-test'
-  id: '__root__' | '/' | '/db-test' | '/health' | '/supabase-test'
+  to:
+    | '/'
+    | '/anon-test'
+    | '/db-test'
+    | '/health'
+    | '/rls-test'
+    | '/supabase-test'
+  id:
+    | '__root__'
+    | '/'
+    | '/anon-test'
+    | '/db-test'
+    | '/health'
+    | '/rls-test'
+    | '/supabase-test'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnonTestRoute: typeof AnonTestRoute
   DbTestRoute: typeof DbTestRoute
   HealthRoute: typeof HealthRoute
+  RlsTestRoute: typeof RlsTestRoute
   SupabaseTestRoute: typeof SupabaseTestRoute
 }
 
@@ -76,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/supabase-test'
       fullPath: '/supabase-test'
       preLoaderRoute: typeof SupabaseTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rls-test': {
+      id: '/rls-test'
+      path: '/rls-test'
+      fullPath: '/rls-test'
+      preLoaderRoute: typeof RlsTestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/health': {
@@ -92,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DbTestRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/anon-test': {
+      id: '/anon-test'
+      path: '/anon-test'
+      fullPath: '/anon-test'
+      preLoaderRoute: typeof AnonTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,8 +157,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnonTestRoute: AnonTestRoute,
   DbTestRoute: DbTestRoute,
   HealthRoute: HealthRoute,
+  RlsTestRoute: RlsTestRoute,
   SupabaseTestRoute: SupabaseTestRoute,
 }
 export const routeTree = rootRouteImport
