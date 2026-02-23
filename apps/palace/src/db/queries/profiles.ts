@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "../client";
-import { profiles } from "../schema/profiles";
+import { db } from "@/db/drizzle";
+import { profiles } from "@/db/schema/profiles";
 
 export async function listProfiles() {
   return db.select().from(profiles);

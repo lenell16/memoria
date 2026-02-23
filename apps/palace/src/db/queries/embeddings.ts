@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "../client";
-import { embeddings } from "../schema/embeddings";
+import { db } from "@/db/drizzle";
+import { embeddings } from "@/db/schema/embeddings";
 
 export async function listEmbeddingsByOwner(ownerId: string) {
   return db.select().from(embeddings).where(eq(embeddings.ownerId, ownerId));
