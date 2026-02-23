@@ -9,36 +9,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SupabaseTestRouteImport } from './routes/supabase-test'
-import { Route as RlsTestRouteImport } from './routes/rls-test'
-import { Route as HealthRouteImport } from './routes/health'
-import { Route as DbTestRouteImport } from './routes/db-test'
-import { Route as AnonTestRouteImport } from './routes/anon-test'
+import { Route as UpdatePasswordRouteImport } from './routes/update-password'
+import { Route as SignUpSuccessRouteImport } from './routes/sign-up-success'
+import { Route as SignUpRouteImport } from './routes/sign-up'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthErrorRouteImport } from './routes/auth/error'
+import { Route as AuthConfirmRouteImport } from './routes/auth/confirm'
+import { Route as ProtectedProtectedRouteImport } from './routes/_protected/protected'
 
-const SupabaseTestRoute = SupabaseTestRouteImport.update({
-  id: '/supabase-test',
-  path: '/supabase-test',
+const UpdatePasswordRoute = UpdatePasswordRouteImport.update({
+  id: '/update-password',
+  path: '/update-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RlsTestRoute = RlsTestRouteImport.update({
-  id: '/rls-test',
-  path: '/rls-test',
+const SignUpSuccessRoute = SignUpSuccessRouteImport.update({
+  id: '/sign-up-success',
+  path: '/sign-up-success',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HealthRoute = HealthRouteImport.update({
-  id: '/health',
-  path: '/health',
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DbTestRoute = DbTestRouteImport.update({
-  id: '/db-test',
-  path: '/db-test',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnonTestRoute = AnonTestRouteImport.update({
-  id: '/anon-test',
-  path: '/anon-test',
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -46,103 +54,148 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthErrorRoute = AuthErrorRouteImport.update({
+  id: '/auth/error',
+  path: '/auth/error',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthConfirmRoute = AuthConfirmRouteImport.update({
+  id: '/auth/confirm',
+  path: '/auth/confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedProtectedRoute = ProtectedProtectedRouteImport.update({
+  id: '/protected',
+  path: '/protected',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/anon-test': typeof AnonTestRoute
-  '/db-test': typeof DbTestRoute
-  '/health': typeof HealthRoute
-  '/rls-test': typeof RlsTestRoute
-  '/supabase-test': typeof SupabaseTestRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/sign-up': typeof SignUpRoute
+  '/sign-up-success': typeof SignUpSuccessRoute
+  '/update-password': typeof UpdatePasswordRoute
+  '/protected': typeof ProtectedProtectedRoute
+  '/auth/confirm': typeof AuthConfirmRoute
+  '/auth/error': typeof AuthErrorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/anon-test': typeof AnonTestRoute
-  '/db-test': typeof DbTestRoute
-  '/health': typeof HealthRoute
-  '/rls-test': typeof RlsTestRoute
-  '/supabase-test': typeof SupabaseTestRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/sign-up': typeof SignUpRoute
+  '/sign-up-success': typeof SignUpSuccessRoute
+  '/update-password': typeof UpdatePasswordRoute
+  '/protected': typeof ProtectedProtectedRoute
+  '/auth/confirm': typeof AuthConfirmRoute
+  '/auth/error': typeof AuthErrorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/anon-test': typeof AnonTestRoute
-  '/db-test': typeof DbTestRoute
-  '/health': typeof HealthRoute
-  '/rls-test': typeof RlsTestRoute
-  '/supabase-test': typeof SupabaseTestRoute
+  '/_protected': typeof ProtectedRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/sign-up': typeof SignUpRoute
+  '/sign-up-success': typeof SignUpSuccessRoute
+  '/update-password': typeof UpdatePasswordRoute
+  '/_protected/protected': typeof ProtectedProtectedRoute
+  '/auth/confirm': typeof AuthConfirmRoute
+  '/auth/error': typeof AuthErrorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/anon-test'
-    | '/db-test'
-    | '/health'
-    | '/rls-test'
-    | '/supabase-test'
+    | '/forgot-password'
+    | '/login'
+    | '/sign-up'
+    | '/sign-up-success'
+    | '/update-password'
+    | '/protected'
+    | '/auth/confirm'
+    | '/auth/error'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/anon-test'
-    | '/db-test'
-    | '/health'
-    | '/rls-test'
-    | '/supabase-test'
+    | '/forgot-password'
+    | '/login'
+    | '/sign-up'
+    | '/sign-up-success'
+    | '/update-password'
+    | '/protected'
+    | '/auth/confirm'
+    | '/auth/error'
   id:
     | '__root__'
     | '/'
-    | '/anon-test'
-    | '/db-test'
-    | '/health'
-    | '/rls-test'
-    | '/supabase-test'
+    | '/_protected'
+    | '/forgot-password'
+    | '/login'
+    | '/sign-up'
+    | '/sign-up-success'
+    | '/update-password'
+    | '/_protected/protected'
+    | '/auth/confirm'
+    | '/auth/error'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AnonTestRoute: typeof AnonTestRoute
-  DbTestRoute: typeof DbTestRoute
-  HealthRoute: typeof HealthRoute
-  RlsTestRoute: typeof RlsTestRoute
-  SupabaseTestRoute: typeof SupabaseTestRoute
+  ProtectedRoute: typeof ProtectedRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LoginRoute: typeof LoginRoute
+  SignUpRoute: typeof SignUpRoute
+  SignUpSuccessRoute: typeof SignUpSuccessRoute
+  UpdatePasswordRoute: typeof UpdatePasswordRoute
+  AuthConfirmRoute: typeof AuthConfirmRoute
+  AuthErrorRoute: typeof AuthErrorRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/supabase-test': {
-      id: '/supabase-test'
-      path: '/supabase-test'
-      fullPath: '/supabase-test'
-      preLoaderRoute: typeof SupabaseTestRouteImport
+    '/update-password': {
+      id: '/update-password'
+      path: '/update-password'
+      fullPath: '/update-password'
+      preLoaderRoute: typeof UpdatePasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/rls-test': {
-      id: '/rls-test'
-      path: '/rls-test'
-      fullPath: '/rls-test'
-      preLoaderRoute: typeof RlsTestRouteImport
+    '/sign-up-success': {
+      id: '/sign-up-success'
+      path: '/sign-up-success'
+      fullPath: '/sign-up-success'
+      preLoaderRoute: typeof SignUpSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/health': {
-      id: '/health'
-      path: '/health'
-      fullPath: '/health'
-      preLoaderRoute: typeof HealthRouteImport
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/db-test': {
-      id: '/db-test'
-      path: '/db-test'
-      fullPath: '/db-test'
-      preLoaderRoute: typeof DbTestRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/anon-test': {
-      id: '/anon-test'
-      path: '/anon-test'
-      fullPath: '/anon-test'
-      preLoaderRoute: typeof AnonTestRouteImport
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -152,16 +205,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/error': {
+      id: '/auth/error'
+      path: '/auth/error'
+      fullPath: '/auth/error'
+      preLoaderRoute: typeof AuthErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/confirm': {
+      id: '/auth/confirm'
+      path: '/auth/confirm'
+      fullPath: '/auth/confirm'
+      preLoaderRoute: typeof AuthConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected/protected': {
+      id: '/_protected/protected'
+      path: '/protected'
+      fullPath: '/protected'
+      preLoaderRoute: typeof ProtectedProtectedRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
   }
 }
 
+interface ProtectedRouteChildren {
+  ProtectedProtectedRoute: typeof ProtectedProtectedRoute
+}
+
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedProtectedRoute: ProtectedProtectedRoute,
+}
+
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AnonTestRoute: AnonTestRoute,
-  DbTestRoute: DbTestRoute,
-  HealthRoute: HealthRoute,
-  RlsTestRoute: RlsTestRoute,
-  SupabaseTestRoute: SupabaseTestRoute,
+  ProtectedRoute: ProtectedRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  LoginRoute: LoginRoute,
+  SignUpRoute: SignUpRoute,
+  SignUpSuccessRoute: SignUpSuccessRoute,
+  UpdatePasswordRoute: UpdatePasswordRoute,
+  AuthConfirmRoute: AuthConfirmRoute,
+  AuthErrorRoute: AuthErrorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

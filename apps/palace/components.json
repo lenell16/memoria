@@ -12,9 +12,12 @@
   "iconLibrary": "lucide",
   "aliases": {
     "components": "@/components",
-    "hooks": "@/hooks",
-    "lib": "@/lib",
     "utils": "@repo/shadcn-ui/lib/utils",
-    "ui": "@repo/shadcn-ui/components/ui"
+    "ui": "@repo/shadcn-ui/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "registries": {
+    "@supabase": "https://supabase.com/ui/r/{name}.json"
   }
 }
