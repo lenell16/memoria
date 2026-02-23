@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createSupabaseAdmin } from "../supabase/admin";
-import { createSupabaseAnon } from "../supabase/anon";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 /**
  * Tests the dedicated anon client: it always runs as the anon role,
@@ -12,8 +12,8 @@ export const runAnonClientTest = createServerFn({ method: "GET" }).handler(
     const testOwnerId = "00000000-0000-0000-0000-000000000002";
     const placeholderEmbedding = Array(1536).fill(0);
 
-    const admin = createSupabaseAdmin();
-    const anon = createSupabaseAnon();
+    const admin = createAdminClient();
+    const anon = createClient();
 
     // Insert via admin (bypasses RLS)
     const { data: insertData, error: insertError } = await admin

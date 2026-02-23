@@ -18,7 +18,7 @@ function SupabaseTestPage() {
       </h1>
       <section className="mt-10 rounded-xl border p-6">
         <p className="text-sm text-muted-foreground">
-          User-context client (getSupabaseServerClient) — respects RLS
+          User-context client (createClient from lib/supabase/server) — respects RLS
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
           Timestamp: {data.timestamp}

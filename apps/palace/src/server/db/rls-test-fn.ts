@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createSupabaseAdmin } from "../supabase/admin";
-import { getSupabaseServerClient } from "../supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 /**
  * Demonstrates RLS policy behavior:
@@ -13,7 +13,7 @@ export const runRlsPolicyTest = createServerFn({ method: "GET" }).handler(
     const testOwnerId = "00000000-0000-0000-0000-000000000001";
     const placeholderEmbedding = Array(1536).fill(0);
 
-    const admin = createSupabaseAdmin();
+    const admin = createAdminClient();
 
     // Insert via admin (bypasses RLS)
     const { data: insertData, error: insertError } = await admin
@@ -41,7 +41,7 @@ export const runRlsPolicyTest = createServerFn({ method: "GET" }).handler(
     const adminRowCount = adminData?.length ?? 0;
 
     // Read via user-context client (anon, not logged in) - RLS blocks access
-    const userClient = getSupabaseServerClient();
+    const userClient = createClient();
     const { data: userData } = await userClient.from("embeddings").select("id");
     const userContextRowCount = userData?.length ?? 0;
 

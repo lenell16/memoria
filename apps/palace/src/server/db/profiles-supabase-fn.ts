@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getSupabaseServerClient } from "../supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export const getProfilesViaSupabase = createServerFn({ method: "GET" }).handler(
   async () => {
-    const supabase = getSupabaseServerClient();
+    const supabase = createClient();
     const { data, error } = await supabase.from("profiles").select("*");
     return {
       profiles: data ?? [],

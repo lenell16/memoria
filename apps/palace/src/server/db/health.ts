@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createSupabaseAdmin } from "../supabase/admin";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const checkDbHealth = createServerFn({ method: "GET" }).handler(async () => {
   try {
-    const supabase = createSupabaseAdmin();
+    const supabase = createAdminClient();
     const { error } = await supabase.auth.admin.listUsers({ perPage: 1 });
     if (error) {
       return {
