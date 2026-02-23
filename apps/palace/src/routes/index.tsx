@@ -1,23 +1,42 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router';
+import { useChat } from '@ai-sdk/react';
+import { useState } from 'react';
 
-export const Route = createFileRoute("/")({ component: App });
+export const Route = createFileRoute('/')({
+  component: Chat,
+});
 
-function App() {
+function Chat() {
+  const [input, setInput] = useState('');
+  const { messages, sendMessage } = useChat();
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col justify-center px-6 py-24">
-      <h1 className="text-4xl font-semibold tracking-tight text-foreground">Palace</h1>
-      <p className="mt-4 max-w-2xl text-base text-muted-foreground">
-        Clean base app scaffold. Template demos were removed so we can add features intentionally.
-      </p>
-      <section className="mt-10 rounded-xl border p-6">
-        <h2 className="text-lg font-medium">Current baseline</h2>
-        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
-          <li>TanStack Router file-based routing with a single home route.</li>
-          <li>TanStack Query SSR router integration is still wired in `router.tsx`.</li>
-          <li>Devtools are available in the root document shell.</li>
-          <li>Form hook pattern is preserved in `hooks/form.ts` and `hooks/form-context.ts`.</li>
-        </ul>
-      </section>
-    </main>
+    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+      {messages.map(message => (
+        <div key={message.id} className="whitespace-pre-wrap">
+          {message.role === 'user' ? 'User: ' : 'AI: '}
+          {message.parts.map((part, i) => {
+            switch (part.type) {
+              case 'text':
+                return <div key={`${message.id}-${i}`}>{part.text}</div>;
+            }
+          })}
+        </div>
+      ))}
+
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          sendMessage({ text: input });
+          setInput('');
+        }}
+      >
+        <input
+          className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
+          value={input}
+          placeholder="Say something..."
+          onChange={e => setInput(e.currentTarget.value)}
+        />
+      </form>
+    </div>
   );
 }

@@ -19,6 +19,7 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthErrorRouteImport } from './routes/auth/error'
 import { Route as AuthConfirmRouteImport } from './routes/auth/confirm'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ProtectedProtectedRouteImport } from './routes/_protected/protected'
 
 const WorkflowTestRoute = WorkflowTestRouteImport.update({
@@ -70,6 +71,11 @@ const AuthConfirmRoute = AuthConfirmRouteImport.update({
   path: '/auth/confirm',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtectedProtectedRoute = ProtectedProtectedRouteImport.update({
   id: '/protected',
   path: '/protected',
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/update-password': typeof UpdatePasswordRoute
   '/workflow-test': typeof WorkflowTestRoute
   '/protected': typeof ProtectedProtectedRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
 }
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/update-password': typeof UpdatePasswordRoute
   '/workflow-test': typeof WorkflowTestRoute
   '/protected': typeof ProtectedProtectedRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
 }
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/update-password': typeof UpdatePasswordRoute
   '/workflow-test': typeof WorkflowTestRoute
   '/_protected/protected': typeof ProtectedProtectedRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
 }
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/update-password'
     | '/workflow-test'
     | '/protected'
+    | '/api/chat'
     | '/auth/confirm'
     | '/auth/error'
   fileRoutesByTo: FileRoutesByTo
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/update-password'
     | '/workflow-test'
     | '/protected'
+    | '/api/chat'
     | '/auth/confirm'
     | '/auth/error'
   id:
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/update-password'
     | '/workflow-test'
     | '/_protected/protected'
+    | '/api/chat'
     | '/auth/confirm'
     | '/auth/error'
   fileRoutesById: FileRoutesById
@@ -163,6 +175,7 @@ export interface RootRouteChildren {
   SignUpSuccessRoute: typeof SignUpSuccessRoute
   UpdatePasswordRoute: typeof UpdatePasswordRoute
   WorkflowTestRoute: typeof WorkflowTestRoute
+  ApiChatRoute: typeof ApiChatRoute
   AuthConfirmRoute: typeof AuthConfirmRoute
   AuthErrorRoute: typeof AuthErrorRoute
 }
@@ -239,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthConfirmRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_protected/protected': {
       id: '/_protected/protected'
       path: '/protected'
@@ -270,6 +290,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignUpSuccessRoute: SignUpSuccessRoute,
   UpdatePasswordRoute: UpdatePasswordRoute,
   WorkflowTestRoute: WorkflowTestRoute,
+  ApiChatRoute: ApiChatRoute,
   AuthConfirmRoute: AuthConfirmRoute,
   AuthErrorRoute: AuthErrorRoute,
 }
