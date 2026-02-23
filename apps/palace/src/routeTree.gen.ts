@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkflowTestRouteImport } from './routes/workflow-test'
 import { Route as UpdatePasswordRouteImport } from './routes/update-password'
 import { Route as SignUpSuccessRouteImport } from './routes/sign-up-success'
 import { Route as SignUpRouteImport } from './routes/sign-up'
@@ -20,6 +21,11 @@ import { Route as AuthErrorRouteImport } from './routes/auth/error'
 import { Route as AuthConfirmRouteImport } from './routes/auth/confirm'
 import { Route as ProtectedProtectedRouteImport } from './routes/_protected/protected'
 
+const WorkflowTestRoute = WorkflowTestRouteImport.update({
+  id: '/workflow-test',
+  path: '/workflow-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UpdatePasswordRoute = UpdatePasswordRouteImport.update({
   id: '/update-password',
   path: '/update-password',
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof SignUpRoute
   '/sign-up-success': typeof SignUpSuccessRoute
   '/update-password': typeof UpdatePasswordRoute
+  '/workflow-test': typeof WorkflowTestRoute
   '/protected': typeof ProtectedProtectedRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/sign-up': typeof SignUpRoute
   '/sign-up-success': typeof SignUpSuccessRoute
   '/update-password': typeof UpdatePasswordRoute
+  '/workflow-test': typeof WorkflowTestRoute
   '/protected': typeof ProtectedProtectedRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/sign-up': typeof SignUpRoute
   '/sign-up-success': typeof SignUpSuccessRoute
   '/update-password': typeof UpdatePasswordRoute
+  '/workflow-test': typeof WorkflowTestRoute
   '/_protected/protected': typeof ProtectedProtectedRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/sign-up-success'
     | '/update-password'
+    | '/workflow-test'
     | '/protected'
     | '/auth/confirm'
     | '/auth/error'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/sign-up-success'
     | '/update-password'
+    | '/workflow-test'
     | '/protected'
     | '/auth/confirm'
     | '/auth/error'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/sign-up-success'
     | '/update-password'
+    | '/workflow-test'
     | '/_protected/protected'
     | '/auth/confirm'
     | '/auth/error'
@@ -150,12 +162,20 @@ export interface RootRouteChildren {
   SignUpRoute: typeof SignUpRoute
   SignUpSuccessRoute: typeof SignUpSuccessRoute
   UpdatePasswordRoute: typeof UpdatePasswordRoute
+  WorkflowTestRoute: typeof WorkflowTestRoute
   AuthConfirmRoute: typeof AuthConfirmRoute
   AuthErrorRoute: typeof AuthErrorRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/workflow-test': {
+      id: '/workflow-test'
+      path: '/workflow-test'
+      fullPath: '/workflow-test'
+      preLoaderRoute: typeof WorkflowTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/update-password': {
       id: '/update-password'
       path: '/update-password'
@@ -249,6 +269,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignUpRoute: SignUpRoute,
   SignUpSuccessRoute: SignUpSuccessRoute,
   UpdatePasswordRoute: UpdatePasswordRoute,
+  WorkflowTestRoute: WorkflowTestRoute,
   AuthConfirmRoute: AuthConfirmRoute,
   AuthErrorRoute: AuthErrorRoute,
 }

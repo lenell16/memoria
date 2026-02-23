@@ -6,6 +6,8 @@ import { defineConfig } from "vite";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 
 import tailwindcss from "@tailwindcss/vite";
+import { workflow } from "workflow/vite";
+import { nitro } from "nitro/vite";
 
 const config = defineConfig({
   resolve: {
@@ -16,6 +18,10 @@ const config = defineConfig({
   plugins: [
     devtools(),
     // this is the plugin that enables path aliases
+    nitro({
+      modules: ["workflow/nitro"],
+    }),
+    workflow(),
     viteTsConfigPaths({
       projects: ["./tsconfig.json"],
     }),
