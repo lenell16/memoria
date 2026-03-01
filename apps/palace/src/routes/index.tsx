@@ -1,22 +1,22 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useChat } from '@ai-sdk/react';
-import { useState } from 'react';
+import { useChat } from "@ai-sdk/react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   component: Chat,
 });
 
 function Chat() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const { messages, sendMessage } = useChat();
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-      {messages.map(message => (
+    <div className="stretch mx-auto flex w-full max-w-md flex-col py-24">
+      {messages.map((message) => (
         <div key={message.id} className="whitespace-pre-wrap">
-          {message.role === 'user' ? 'User: ' : 'AI: '}
+          {message.role === "user" ? "User: " : "AI: "}
           {message.parts.map((part, i) => {
             switch (part.type) {
-              case 'text':
+              case "text":
                 return <div key={`${message.id}-${i}`}>{part.text}</div>;
             }
           })}
@@ -24,17 +24,17 @@ function Chat() {
       ))}
 
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           sendMessage({ text: input });
-          setInput('');
+          setInput("");
         }}
       >
         <input
-          className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
+          className="fixed bottom-0 mb-8 w-full max-w-md rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
           value={input}
           placeholder="Say something..."
-          onChange={e => setInput(e.currentTarget.value)}
+          onChange={(e) => setInput(e.currentTarget.value)}
         />
       </form>
     </div>

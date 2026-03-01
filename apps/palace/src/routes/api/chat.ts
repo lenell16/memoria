@@ -1,8 +1,8 @@
-import { streamText, UIMessage, convertToModelMessages } from 'ai';
-import { createFileRoute } from '@tanstack/react-router';
-import { getModel } from '@/lib/ai/model';
+import { getModel } from "@/lib/ai/model";
+import { createFileRoute } from "@tanstack/react-router";
+import { streamText, UIMessage, convertToModelMessages } from "ai";
 
-export const Route = createFileRoute('/api/chat')({
+export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {

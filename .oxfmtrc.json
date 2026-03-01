@@ -15,11 +15,16 @@
     "**/build/**",
     "**/coverage/**",
     "**/.cache/**",
+    "**/.agents/**",
+    "**/.cursor/**",
     "**/routeTree.gen.ts",
     "**/bun.lock",
     "**/package-lock.json",
     "**/pnpm-lock.yaml",
-    "**/yarn.lock"
+    "**/yarn.lock",
+    "**/supabase/migrations/**",
+    "**/supabase/.gitignore",
+    "**/supabase/functions/**"
   ],
   "experimentalTailwindcss": {
     "functions": ["clsx", "cn", "cva", "tw", "twMerge"],

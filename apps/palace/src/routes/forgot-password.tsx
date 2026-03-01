@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-import { ForgotPasswordForm } from '@/components/forgot-password-form'
+import { ForgotPasswordForm } from "@/components/forgot-password-form";
 
-export const Route = createFileRoute('/forgot-password')({
+export const Route = createFileRoute("/forgot-password")({
   component: ForgotPassword,
-})
+});
 
 function ForgotPassword() {
   return (
@@ -13,5 +13,5 @@ function ForgotPassword() {
         <ForgotPasswordForm />
       </div>
     </div>
-  )
+  );
 }

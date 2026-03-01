@@ -1,47 +1,47 @@
-import { Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 
-import { cn } from '@repo/shadcn-ui/lib/utils'
-import { createClient } from '@/lib/supabase/client'
-import { Button } from '@repo/shadcn-ui/components/ui/button'
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@repo/shadcn-ui/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@repo/shadcn-ui/components/ui/card'
-import { Input } from '@repo/shadcn-ui/components/ui/input'
-import { Label } from '@repo/shadcn-ui/components/ui/label'
+} from "@repo/shadcn-ui/components/ui/card";
+import { Input } from "@repo/shadcn-ui/components/ui/input";
+import { Label } from "@repo/shadcn-ui/components/ui/label";
+import { cn } from "@repo/shadcn-ui/lib/utils";
 
-export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const supabase = createClient()
-    setIsLoading(true)
-    setError(null)
+    e.preventDefault();
+    const supabase = createClient();
+    setIsLoading(true);
+    setError(null);
 
     try {
       // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:3000/update-password',
-      })
-      if (error) throw error
-      setSuccess(true)
+        redirectTo: "http://localhost:3000/update-password",
+      });
+      if (error) throw error;
+      setSuccess(true);
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       {success ? (
         <Card>
           <CardHeader>
@@ -79,11 +79,11 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Sending...' : 'Send reset email'}
+                  {isLoading ? "Sending..." : "Send reset email"}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <Link to="/login" className="underline underline-offset-4">
                   Login
                 </Link>
@@ -93,5 +93,5 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
         </Card>
       )}
     </div>
-  )
+  );
 }

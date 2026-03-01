@@ -6,8 +6,8 @@ import { defineConfig } from "vite";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 
 import tailwindcss from "@tailwindcss/vite";
-import { workflow } from "workflow/vite";
 import { nitro } from "nitro/vite";
+import { workflow } from "workflow/vite";
 
 const config = defineConfig({
   resolve: {

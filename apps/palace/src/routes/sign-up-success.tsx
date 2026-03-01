@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
 import {
   Card,
@@ -6,11 +6,11 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@repo/shadcn-ui/components/ui/card'
+} from "@repo/shadcn-ui/components/ui/card";
 
-export const Route = createFileRoute('/sign-up-success')({
+export const Route = createFileRoute("/sign-up-success")({
   component: SignUpSuccess,
-})
+});
 
 function SignUpSuccess() {
   return (
@@ -32,5 +32,5 @@ function SignUpSuccess() {
         </div>
       </div>
     </div>
-  )
+  );
 }

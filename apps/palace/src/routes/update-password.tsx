@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-import { UpdatePasswordForm } from '@/components/update-password-form'
+import { UpdatePasswordForm } from "@/components/update-password-form";
 
-export const Route = createFileRoute('/update-password')({
+export const Route = createFileRoute("/update-password")({
   component: UpdatePassword,
-})
+});
 
 function UpdatePassword() {
   return (
@@ -13,5 +13,5 @@ function UpdatePassword() {
         <UpdatePasswordForm />
       </div>
     </div>
-  )
+  );
 }

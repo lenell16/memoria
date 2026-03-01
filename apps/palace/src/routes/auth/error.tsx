@@ -1,19 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@repo/shadcn-ui/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/shadcn-ui/components/ui/card";
 
-export const Route = createFileRoute('/auth/error')({
+export const Route = createFileRoute("/auth/error")({
   component: AuthError,
   validateSearch: (params) => {
-    if (params.error && typeof params.error === 'string') {
-      return { error: params.error }
+    if (params.error && typeof params.error === "string") {
+      return { error: params.error };
     }
-    return null
+    return null;
   },
-})
+});
 
 function AuthError() {
-  const params = Route.useSearch()
+  const params = Route.useSearch();
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -34,5 +34,5 @@ function AuthError() {
         </div>
       </div>
     </div>
-  )
+  );
 }

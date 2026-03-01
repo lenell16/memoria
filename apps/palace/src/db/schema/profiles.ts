@@ -1,11 +1,5 @@
-import {
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-  pgPolicy,
-} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import { pgTable, text, timestamp, uuid, pgPolicy } from "drizzle-orm/pg-core";
 import { authenticatedRole, authUid } from "drizzle-orm/supabase/rls";
 
 export const profiles = pgTable(
@@ -14,12 +8,8 @@ export const profiles = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     displayName: text("display_name").notNull(),
     avatarUrl: text("avatar_url"),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
     pgPolicy("profiles_select_own", {
@@ -32,5 +22,5 @@ export const profiles = pgTable(
       to: authenticatedRole,
       using: sql`(select ${authUid}) = ${table.id}`,
     }),
-  ]
+  ],
 ).enableRLS();

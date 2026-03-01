@@ -1,13 +1,5 @@
-import {
-  pgTable,
-  uuid,
-  text,
-  timestamp,
-  jsonb,
-  vector,
-  pgPolicy,
-} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import { pgTable, uuid, text, timestamp, jsonb, vector, pgPolicy } from "drizzle-orm/pg-core";
 import { authenticatedRole, authUid } from "drizzle-orm/supabase/rls";
 
 export const embeddings = pgTable(
@@ -18,9 +10,7 @@ export const embeddings = pgTable(
     content: text("content").notNull(),
     embedding: vector("embedding", { dimensions: 1536 }).notNull(),
     metadata: jsonb("metadata").notNull().default({}),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
     pgPolicy("embeddings_select_own", {
@@ -43,5 +33,5 @@ export const embeddings = pgTable(
       to: authenticatedRole,
       using: sql`(select ${authUid}) = ${table.ownerId}`,
     }),
-  ]
+  ],
 ).enableRLS();

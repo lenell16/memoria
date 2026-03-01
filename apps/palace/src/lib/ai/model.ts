@@ -1,5 +1,5 @@
-import { wrapLanguageModel, gateway, GatewayModelId } from 'ai';
-import { devToolsMiddleware } from '@ai-sdk/devtools';
+import { devToolsMiddleware } from "@ai-sdk/devtools";
+import { wrapLanguageModel, gateway, GatewayModelId } from "ai";
 
 export function getModel(modelId: GatewayModelId) {
   return wrapLanguageModel({
@@ -7,4 +7,3 @@ export function getModel(modelId: GatewayModelId) {
     middleware: [devToolsMiddleware()],
   });
 }
-

@@ -21,6 +21,7 @@ The app uses Supabase for local development. To run the full stack with database
 ### Setup steps
 
 1. From `apps/palace`, start the local Supabase stack:
+
    ```bash
    cd apps/palace && bun run db:local:start
    ```
@@ -28,6 +29,7 @@ The app uses Supabase for local development. To run the full stack with database
 2. Copy `.env.example` to `.env.local` and fill in the values. Use `supabase status --output json` for `ANON_KEY`, `SERVICE_ROLE_KEY`, `API_URL`, and `DB_URL` (the JSON output provides JWT keys required by the Supabase JS client).
 
 3. Run the app:
+
    ```bash
    bun run dev
    ```
