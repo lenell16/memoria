@@ -41,8 +41,14 @@ todos:
   - id: app-shell
     content: Update _protected layout with sidebar (feeds, sources, import, search links)
     status: pending
+  - id: tests-parsers
+    content: Create unit tests for all 4 parsers with fixture data (bookmarks HTML, JSON variants, CSV, OPML)
+    status: pending
+  - id: tests-integration
+    content: Create integration tests for import flow, sources CRUD API, quick-add, and payload store (against local Supabase)
+    status: pending
   - id: verify
-    content: Type-check, lint, verify all routes load and navigate correctly
+    content: Type-check, lint, run full test suite, manual smoke test of all UI routes
     status: pending
 isProject: false
 ---
@@ -437,7 +443,209 @@ No other new dependencies needed. HTML parsing for bookmarks uses string manipul
 
 ---
 
+## Verification Strategy
+
+Phase 2 has three layers that need different testing approaches.
+
+### Layer 1: Parser Unit Tests (pure functions, no DB)
+
+Each parser is a pure function: string in, structured data out. These are the easiest to test and the most important to get right — if parsing is wrong, everything downstream is wrong.
+
+Create test files at `src/lib/connector/parsers/__tests__/`:
+
+#### `bookmarks.test.ts`
+
+Fixture: inline string of real Chrome `bookmarks.html` format (the `<!DOCTYPE NETSCAPE-Bookmark-file-1>` structure).
+
+
+| Test case                 | What it verifies                                                               |
+| ------------------------- | ------------------------------------------------------------------------------ |
+| Standard Chrome export    | Extracts URLs, titles, ADD_DATE timestamps                                     |
+| Folder hierarchy          | Nested `<DL>` produces correct folder paths (e.g. `"Bookmarks Bar/Dev/React"`) |
+| Empty folders             | Folders with no bookmarks don't produce items                                  |
+| Special characters        | Titles with `&`, `"`, unicode characters survive                               |
+| Missing attributes        | Entries without `ADD_DATE` or `ICON` don't crash                               |
+| Large file (100+ entries) | Parses without timeout, correct count                                          |
+| Firefox format            | Minor structural differences from Chrome                                       |
+
+
+#### `json.test.ts`
+
+
+| Test case                                     | What it verifies                                               |
+| --------------------------------------------- | -------------------------------------------------------------- |
+| Plain array of `{url, title}`                 | Direct extraction                                              |
+| Object with `.items` array                    | Detects nested items                                           |
+| Object with `.bookmarks` array                | Detects nested bookmarks                                       |
+| Object with `.tabs` array (SensorBuddy)       | Maps `{url, title, favIconUrl}`                                |
+| OneTab text format (`url | title` per line)   | Detects line format, splits correctly                          |
+| Single object (not array)                     | Wraps in array                                                 |
+| Empty array                                   | Returns empty array, no crash                                  |
+| Deeply nested data                            | Extracts URL/title from common field names at any depth        |
+| Unknown structure (no recognizable URL field) | Returns items with `data` populated, `url` and `title` as null |
+
+
+#### `csv.test.ts`
+
+
+| Test case                      | What it verifies                            |
+| ------------------------------ | ------------------------------------------- |
+| With headers: `url,title,date` | Extracts by header name                     |
+| With headers: `link,name`      | Detects `link` as URL field                 |
+| Without headers (URLs only)    | Each line treated as a URL                  |
+| Tab-separated                  | TSV works same as CSV                       |
+| Quoted fields with commas      | `"Smith, John",http://...` parses correctly |
+| Empty file                     | Returns empty array                         |
+| One row                        | Returns single item                         |
+
+
+#### `opml.test.ts`
+
+Fixture: inline string of real OPML (Overcast/Pocket Casts export format).
+
+
+| Test case                      | What it verifies                                              |
+| ------------------------------ | ------------------------------------------------------------- |
+| Standard podcast OPML          | Extracts `title`, `xmlUrl`, `htmlUrl`                         |
+| Category hierarchy             | Nested `<outline>` produces correct category path             |
+| Mixed outlines (RSS + non-RSS) | Only extracts entries with `xmlUrl` attribute                 |
+| Empty OPML                     | Returns empty array                                           |
+| Malformed XML                  | Fails gracefully with a useful error, doesn't throw unhandled |
+
+
+### Layer 2: Integration Tests (real DB, match Phase 1 pattern)
+
+Follow the pattern established in `src/db/__tests__/sources.test.ts` — run against local Supabase Postgres. Each test creates its own user profile, cleans up after itself.
+
+#### `src/lib/storage/__tests__/payload-store.test.ts`
+
+
+| Test case                       | What it verifies                                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Small payload stores inline     | Content < 256KB → `storageBackend: "inline"`, `data` populated, `storageKey` null                |
+| Round-trip inline               | `storePayload` → `retrievePayload` returns identical content                                     |
+| Large payload triggers S3 path  | Content > 256KB → `storageBackend: "s3"`, `storageKey` populated (or stub throws expected error) |
+| Size bytes calculated correctly | `sizeBytes` matches actual content length                                                        |
+
+
+#### `src/lib/connector/parsers/__tests__/import-flow.test.ts`
+
+End-to-end integration test for the import pipeline (parser → payload → items):
+
+
+| Test case                                 | What it verifies                                                                                                                                                                               |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bookmarks HTML → source + payload + items | Upload bookmarks → source created with `type: "bookmark_import"`, payload stored with `format: "html"`, correct number of source items created, each item has `url` and `normalizedData.title` |
+| JSON array → source + payload + items     | Same flow for JSON input                                                                                                                                                                       |
+| CSV links → source + payload + items      | Same flow for CSV                                                                                                                                                                              |
+| OPML → creates source rows (not items)    | OPML import creates N source rows with `type: "rss"` and `isActive: false`, NOT source items                                                                                                   |
+| Empty input → no items created            | Graceful handling, source and payload still created, zero items                                                                                                                                |
+| Quick-add URL → source item               | POST a URL → source item created with `url` populated, `sourceType: "manual"`                                                                                                                  |
+
+
+#### `src/routes/api/__tests__/sources-api.test.ts`
+
+Test the API routes directly (call the handler functions, or use `fetch` against the dev server):
+
+
+| Test case                              | What it verifies                |
+| -------------------------------------- | ------------------------------- |
+| `POST /api/sources` with valid data    | Returns 200 + created source    |
+| `POST /api/sources` with invalid data  | Returns 400 + validation errors |
+| `GET /api/sources`                     | Returns array of user's sources |
+| `GET /api/sources/:id`                 | Returns single source           |
+| `GET /api/sources/:id` with wrong user | Returns 404 (RLS)               |
+| `PUT /api/sources/:id`                 | Updates and returns source      |
+| `DELETE /api/sources/:id`              | Cascades delete, returns 200    |
+
+
+### Layer 3: UI Smoke Tests (manual checklist)
+
+These are walked through in the browser (manually or via browser automation). They verify the full stack — UI renders, API calls succeed, data appears.
+
+```
+PHASE 2 SMOKE TEST CHECKLIST
+─────────────────────────────
+
+Setup: dev server running (bun run dev), local Supabase running, logged in user
+
+[ ] 1. SIDEBAR
+    - Navigate to any protected route
+    - Sidebar renders with: Inbox (disabled), Search (disabled), Sources, Import links
+    - Sources section shows "No sources" empty state or existing sources
+
+[ ] 2. CREATE SOURCE
+    - Navigate to /sources/new
+    - Fill in name: "Test Source", type: "manual"
+    - Submit → redirects to source detail page
+    - Source appears in sidebar sources list
+
+[ ] 3. IMPORT — FILE UPLOAD
+    - Navigate to /import
+    - Drop zone and paste area are visible
+    - Upload a Chrome bookmarks.html file (use a real export or the test fixture)
+    - Progress indicator shows
+    - Success: shows item count, navigates to source detail or shows toast
+    - Source detail shows items list with titles and URLs
+
+[ ] 4. IMPORT — PASTE
+    - Navigate to /import
+    - Paste JSON: [{"url":"https://example.com","title":"Test"}]
+    - Format auto-detected as JSON
+    - Submit → source created, 1 item
+    - Verify item appears in source detail
+
+[ ] 5. IMPORT — CSV LINKS
+    - Paste plain text URLs (one per line)
+    - Format detected as CSV or auto
+    - Submit → items created, one per URL
+
+[ ] 6. QUICK-ADD
+    - Click [+] in top bar
+    - Enter URL: https://github.com
+    - Submit → source item created (verify title was fetched or URL used as fallback)
+
+[ ] 7. SOURCES LIST
+    - Navigate to /sources
+    - All created sources visible with correct type badges and item counts
+    - Click a source → navigates to detail page
+
+[ ] 8. SOURCE DETAIL
+    - Items list is paginated (if > 50 items)
+    - "Load more" button works
+    - Each item shows title, URL hostname, source type
+    - Delete source → confirm dialog → source removed → redirected to /sources
+
+[ ] 9. RECENT IMPORTS
+    - Navigate to /import
+    - "Recent imports" section shows the uploads/pastes from steps 3-5
+    - Each shows name, item count, date
+```
+
+### Running It All
+
+```bash
+# 1. Static analysis
+bun run check-types          # TypeScript — no errors
+bun run lint                 # oxlint — no errors
+
+# 2. Unit tests (parsers — fast, no DB needed)
+bun run test -- --run src/lib/connector/parsers
+
+# 3. Integration tests (needs local Supabase running)
+bun run db:local:start       # if not already running
+bun run test                 # full suite including Phase 1 + Phase 2
+
+# 4. Manual smoke test
+bun run dev                  # start dev server
+# Walk through the checklist above in browser at localhost:3000
+```
+
+---
+
 ## Phase 2 Deliverables Checklist
+
+**Code:**
 
 - `payload-store.ts` — inline storage works, S3 stub exists
 - All 4 parsers created and handle their respective formats
@@ -450,7 +658,19 @@ No other new dependencies needed. HTML parsing for bookmarks uses string manipul
 - Source detail page: shows source info + paginated items
 - Create source page: form works
 - OPML import creates RSS source rows (inactive)
+
+**Tests:**
+
+- Parser unit tests: bookmarks (7 cases), JSON (9 cases), CSV (7 cases), OPML (5 cases)
+- Integration tests: payload-store round-trip, import flow end-to-end, sources API CRUD
+- All tests pass: `bun run test`
+
+**Static analysis:**
+
 - `bun run check-types` passes
 - `bun run lint` passes
-- Manual testing: can upload a Chrome bookmarks HTML file and see items in the source detail view
+
+**Smoke test:**
+
+- 9-point manual UI checklist completed (sidebar, create source, 3 import types, quick-add, sources list, source detail, recent imports)
 
