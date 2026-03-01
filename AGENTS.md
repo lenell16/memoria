@@ -49,6 +49,18 @@ This must be re-run after `bun install` if the cache directory changes.
 
 Supabase local has email confirmations **disabled** by default (`enable_confirmations = false` in `supabase/config.toml`), so sign-up works immediately without email verification. Mailpit (Inbucket) UI is at `http://localhost:54324` for inspecting auth emails if needed.
 
+### DB migration note
+
+`supabase start` automatically applies all SQL files in `supabase/migrations/`. Running `bun run db:migrate` (Drizzle Kit) after that will fail with "relation already exists" because the tables are already created. Only use `db:migrate` against a database that hasn't had the Supabase migrations applied.
+
+### Type checking note
+
+The turbo `check-types` task runs 0 tasks because no package defines a `check-types` script. Run `npx tsc --noEmit` directly in `apps/palace` for TypeScript checking.
+
+### Docker-in-Docker (Cloud VM)
+
+The Cloud VM runs inside a container. Docker requires `fuse-overlayfs` storage driver and `iptables-legacy`. These are pre-configured in the VM snapshot. If Docker fails to start, verify `/etc/docker/daemon.json` has `{"storage-driver": "fuse-overlayfs"}` and iptables is set to legacy mode.
+
 ### AI chat feature
 
 The `/` route has an AI chat interface using Vercel AI SDK streaming to `anthropic/claude-sonnet-4.6`. This requires an AI provider API key (not set up locally by default). The rest of the app works without it.
