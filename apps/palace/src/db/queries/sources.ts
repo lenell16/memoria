@@ -3,25 +3,30 @@ import { feedItems } from "@/db/schema/feeds";
 import { sourceItems, sourcePayloads, sourceRuns, sourceSecrets, sources } from "@/db/schema/sources";
 import { desc, eq, sql } from "drizzle-orm";
 
+type SourceInsert = typeof sources.$inferInsert;
+type SourceSelect = typeof sources.$inferSelect;
+type SourcePayloadInsert = typeof sourcePayloads.$inferInsert;
+type SourcePayloadSelect = typeof sourcePayloads.$inferSelect;
+type SourceItemInsert = typeof sourceItems.$inferInsert;
+type SourceItemSelect = typeof sourceItems.$inferSelect;
+type SourceRunInsert = typeof sourceRuns.$inferInsert;
+type SourceRunSelect = typeof sourceRuns.$inferSelect;
+
 // -- Sources --
 
-export async function listSourcesByUser(userId: string) {
+export async function listSourcesByUser(userId: SourceSelect["userId"]) {
   return db.select().from(sources).where(eq(sources.userId, userId)).orderBy(desc(sources.updatedAt));
 }
 
-export async function getSourceById(id: string) {
+export async function getSourceById(id: SourceSelect["id"]) {
   const rows = await db.select().from(sources).where(eq(sources.id, id));
   return rows[0] ?? null;
 }
 
-export type CreateSourceInput = {
-  userId: string;
-  name: string;
-  type: string;
-  config?: Record<string, unknown>;
-  pipeline?: string;
-  schedule?: Record<string, unknown>;
-};
+export type CreateSourceInput = Pick<
+  SourceInsert,
+  "userId" | "name" | "type" | "config" | "pipeline" | "schedule"
+>;
 
 export async function createSource(data: CreateSourceInput) {
   const rows = await db.insert(sources).values(data).returning();
@@ -29,13 +34,10 @@ export async function createSource(data: CreateSourceInput) {
 }
 
 export type UpdateSourceInput = Partial<
-  Pick<
-    typeof sources.$inferInsert,
-    "name" | "type" | "config" | "pipeline" | "schedule" | "isActive" | "runState" | "lastFetchedAt"
-  >
+  Pick<SourceInsert, "name" | "type" | "config" | "pipeline" | "schedule" | "isActive" | "runState" | "lastFetchedAt">
 >;
 
-export async function updateSource(id: string, data: UpdateSourceInput) {
+export async function updateSource(id: SourceSelect["id"], data: UpdateSourceInput) {
   const rows = await db
     .update(sources)
     .set({ ...data, updatedAt: new Date() })
@@ -44,11 +46,11 @@ export async function updateSource(id: string, data: UpdateSourceInput) {
   return rows[0] ?? null;
 }
 
-export async function deleteSource(id: string) {
+export async function deleteSource(id: SourceSelect["id"]) {
   return db.delete(sources).where(eq(sources.id, id)).returning();
 }
 
-export async function deleteSourceCascade(id: string) {
+export async function deleteSourceCascade(id: SourceSelect["id"]) {
   // Order matters: children before parents.
   await db
     .delete(feedItems)
@@ -62,22 +64,17 @@ export async function deleteSourceCascade(id: string) {
 
 // -- Source Payloads --
 
-export type CreatePayloadInput = {
-  sourceId: string;
-  data?: unknown;
-  storageKey?: string;
-  storageBackend?: string;
-  format: string;
-  mimeType?: string;
-  sizeBytes?: number;
-};
+export type CreatePayloadInput = Pick<
+  SourcePayloadInsert,
+  "sourceId" | "data" | "storageKey" | "storageBackend" | "format" | "mimeType" | "sizeBytes"
+>;
 
 export async function createSourcePayload(data: CreatePayloadInput) {
   const rows = await db.insert(sourcePayloads).values(data).returning();
   return rows[0]!;
 }
 
-export async function listPayloadsBySource(sourceId: string) {
+export async function listPayloadsBySource(sourceId: SourcePayloadSelect["sourceId"]) {
   return db
     .select()
     .from(sourcePayloads)
@@ -85,19 +82,20 @@ export async function listPayloadsBySource(sourceId: string) {
     .orderBy(desc(sourcePayloads.ingestedAt));
 }
 
-export async function getPayloadById(id: string) {
+export async function getPayloadById(id: SourcePayloadSelect["id"]) {
   const rows = await db.select().from(sourcePayloads).where(eq(sourcePayloads.id, id));
   return rows[0] ?? null;
 }
 
 // -- Source Items --
 
-export type CreateSourceItemInput = {
-  payloadId: string;
-  sourceId: string;
-  url?: string;
-  normalizedData: Record<string, unknown>;
-  sourceType: string;
+export type CreateSourceItemInput = Pick<
+  SourceItemInsert,
+  "payloadId" | "sourceId" | "url" | "normalizedData" | "sourceType"
+>;
+export type ListSourceItemsOptions = {
+  limit?: number;
+  offset?: number;
 };
 
 export async function createSourceItems(items: CreateSourceItemInput[]) {
@@ -106,8 +104,8 @@ export async function createSourceItems(items: CreateSourceItemInput[]) {
 }
 
 export async function listSourceItemsBySource(
-  sourceId: string,
-  options?: { limit?: number; offset?: number },
+  sourceId: SourceItemSelect["sourceId"],
+  options?: ListSourceItemsOptions,
 ) {
   const query = db
     .select()
@@ -119,7 +117,7 @@ export async function listSourceItemsBySource(
   return query;
 }
 
-export async function listSourceItemsByPayload(payloadId: string) {
+export async function listSourceItemsByPayload(payloadId: SourceItemSelect["payloadId"]) {
   return db
     .select()
     .from(sourceItems)
@@ -127,12 +125,12 @@ export async function listSourceItemsByPayload(payloadId: string) {
     .orderBy(desc(sourceItems.createdAt));
 }
 
-export async function getSourceItemById(id: string) {
+export async function getSourceItemById(id: SourceItemSelect["id"]) {
   const rows = await db.select().from(sourceItems).where(eq(sourceItems.id, id));
   return rows[0] ?? null;
 }
 
-export async function countSourceItemsBySource(sourceId: string) {
+export async function countSourceItemsBySource(sourceId: SourceItemSelect["sourceId"]) {
   const result = await db
     .select({ count: sql<number>`count(*)` })
     .from(sourceItems)
@@ -142,10 +140,10 @@ export async function countSourceItemsBySource(sourceId: string) {
 
 // -- Source Runs (used heavily in phase 4) --
 
-export type CreateRunInput = {
-  sourceId: string;
-  stateBefore?: Record<string, unknown>;
-};
+export type CreateRunInput = Pick<SourceRunInsert, "sourceId" | "stateBefore">;
+export type FinalizeSourceRunInput = {
+  status: NonNullable<SourceRunInsert["status"]>;
+} & Partial<Pick<SourceRunInsert, "pagesFetched" | "itemsCreated" | "error" | "stateAfter">>;
 
 export async function createSourceRun(data: CreateRunInput) {
   const rows = await db
@@ -156,14 +154,8 @@ export async function createSourceRun(data: CreateRunInput) {
 }
 
 export async function finalizeSourceRun(
-  id: string,
-  data: {
-    status: string;
-    pagesFetched?: number;
-    itemsCreated?: number;
-    error?: string;
-    stateAfter?: Record<string, unknown>;
-  },
+  id: SourceRunSelect["id"],
+  data: FinalizeSourceRunInput,
 ) {
   const rows = await db
     .update(sourceRuns)
@@ -173,7 +165,7 @@ export async function finalizeSourceRun(
   return rows[0] ?? null;
 }
 
-export async function listRunsBySource(sourceId: string, options?: { limit?: number }) {
+export async function listRunsBySource(sourceId: SourceRunSelect["sourceId"], options?: { limit?: number }) {
   const query = db
     .select()
     .from(sourceRuns)
