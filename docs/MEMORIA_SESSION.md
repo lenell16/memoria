@@ -117,6 +117,8 @@ _Things we've converged on or want to keep._
 15. **Level 2 Elo** — Unify extract+filter+transform into one Elo pipeline expression per connector. Don't try to put workflows in Elo (Levels 3–4). See exploration doc.
 16. **Build order** — Foundation (schema) → Manual ingestion (import/paste) → Feeds (views) → Connector engine (automation) → Polish.
 17. **Phase 1 fully specified** — Step-by-step: schema files, drizzle.ts update, migration, query functions (every function listed), Zod validation, cascade delete, indexes, tests, deliverables checklist. Hand-off ready.
+18. **Phase 1 BUILT** — All 7 tables, RLS policies, query functions, Zod schemas, cascade deletes implemented. Schema + queries match the IMPLEMENTATION.md spec exactly.
+19. **All 5 phases fully planned** — Detailed hand-off-ready plans in `.cursor/plans/`. Phase 2 (manual ingestion), Phase 3 (feed system), Phase 4 (connector engine), Phase 5 (polish + extend with 4 sub-phases: 5a sources manager + scheduling, 5b search + item detail, 5c feed builder + SQL filters, 5d extension + graph + polish).
 
 ---
 
