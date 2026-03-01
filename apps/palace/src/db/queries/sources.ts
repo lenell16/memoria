@@ -40,7 +40,7 @@ export type UpdateSourceInput = Partial<
 export async function updateSource(id: SourceSelect["id"], data: UpdateSourceInput) {
   const rows = await db
     .update(sources)
-    .set({ ...data, updatedAt: new Date() })
+    .set({ ...data, updatedAt: sql`now()` })
     .where(eq(sources.id, id))
     .returning();
   return rows[0] ?? null;
@@ -51,15 +51,17 @@ export async function deleteSource(id: SourceSelect["id"]) {
 }
 
 export async function deleteSourceCascade(id: SourceSelect["id"]) {
-  // Order matters: children before parents.
-  await db
-    .delete(feedItems)
-    .where(sql`${feedItems.sourceItemId} in (select id from source_items where source_id = ${id})`);
-  await db.delete(sourceItems).where(eq(sourceItems.sourceId, id));
-  await db.delete(sourcePayloads).where(eq(sourcePayloads.sourceId, id));
-  await db.delete(sourceRuns).where(eq(sourceRuns.sourceId, id));
-  await db.delete(sourceSecrets).where(eq(sourceSecrets.sourceId, id));
-  return db.delete(sources).where(eq(sources.id, id)).returning();
+  return db.transaction(async (tx) => {
+    // Order matters: children before parents.
+    await tx
+      .delete(feedItems)
+      .where(sql`${feedItems.sourceItemId} in (select id from source_items where source_id = ${id})`);
+    await tx.delete(sourceItems).where(eq(sourceItems.sourceId, id));
+    await tx.delete(sourcePayloads).where(eq(sourcePayloads.sourceId, id));
+    await tx.delete(sourceRuns).where(eq(sourceRuns.sourceId, id));
+    await tx.delete(sourceSecrets).where(eq(sourceSecrets.sourceId, id));
+    return tx.delete(sources).where(eq(sources.id, id)).returning();
+  });
 }
 
 // -- Source Payloads --
@@ -159,7 +161,7 @@ export async function finalizeSourceRun(
 ) {
   const rows = await db
     .update(sourceRuns)
-    .set({ ...data, finishedAt: new Date() })
+    .set({ ...data, finishedAt: sql`now()` })
     .where(eq(sourceRuns.id, id))
     .returning();
   return rows[0] ?? null;

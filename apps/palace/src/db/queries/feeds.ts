@@ -32,7 +32,7 @@ export type UpdateFeedInput = Partial<Pick<FeedInsert, "name" | "description" | 
 export async function updateFeed(id: FeedSelect["id"], data: UpdateFeedInput) {
   const rows = await db
     .update(feeds)
-    .set({ ...data, updatedAt: new Date() })
+    .set({ ...data, updatedAt: sql`now()` })
     .where(eq(feeds.id, id))
     .returning();
   return rows[0] ?? null;
@@ -43,8 +43,10 @@ export async function deleteFeed(id: FeedSelect["id"]) {
 }
 
 export async function deleteFeedCascade(id: FeedSelect["id"]) {
-  await db.delete(feedItems).where(eq(feedItems.feedId, id));
-  return db.delete(feeds).where(eq(feeds.id, id)).returning();
+  return db.transaction(async (tx) => {
+    await tx.delete(feedItems).where(eq(feedItems.feedId, id));
+    return tx.delete(feeds).where(eq(feeds.id, id)).returning();
+  });
 }
 
 // -- Feed Items --
@@ -91,7 +93,7 @@ export async function listFeedItems(
 export async function updateFeedItemStatus(id: FeedItemSelect["id"], status: FeedItemStatus) {
   const rows = await db
     .update(feedItems)
-    .set({ status, updatedAt: new Date() })
+    .set({ status, updatedAt: sql`now()` })
     .where(eq(feedItems.id, id))
     .returning();
   return rows[0] ?? null;
@@ -100,7 +102,7 @@ export async function updateFeedItemStatus(id: FeedItemSelect["id"], status: Fee
 export async function updateFeedItemUserData(id: FeedItemSelect["id"], userData: FeedItemInsert["userData"]) {
   const rows = await db
     .update(feedItems)
-    .set({ userData, updatedAt: new Date() })
+    .set({ userData, updatedAt: sql`now()` })
     .where(eq(feedItems.id, id))
     .returning();
   return rows[0] ?? null;
